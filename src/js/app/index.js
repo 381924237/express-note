@@ -1,3 +1,4 @@
-let obj = require('../mod/b.js')
+import Toast from 'mod/toast.js'
+import Event from 'mod/event.js'
 
-console.log(obj.a,obj.b)
+console.log(Event)
