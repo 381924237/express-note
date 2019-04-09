@@ -3,12 +3,15 @@ import Toast from './toast.js'
 import Event from './event.js'
 
 class Note {
-  constructor(){
+  constructor(opts){
     this.defaultOpts = {
       id: '',
       $ct: $('#content').length > 0 ? $('#content') : $('body'),
       context: 'input here'
     }
+    this.initOpts(opts)
+    this.createNote()
+    this.bindEvent()
   }
 
   initOpts(opts){
@@ -74,6 +77,60 @@ class Note {
       }
     })
 
-    
+    $noteHead.on('mousedown', function(e){
+      let evtX = e.pageX - $note.offset().left,   
+          evtY = e.pageY - $note.offset().top
+      $note.addClass('draggable').data('evtPos', {x:evtX, y:evtY})
+    }).on('mouseup', function(){
+       $note.removeClass('draggable').removeData('evtPos')
+    })
+
+    $('body').on('mousemove', function(e){
+      $('.draggable').length && $('.draggable').offset({
+        top: e.pageY - $('.draggable').data('evtPos').y,    
+        left: e.pageX - $('.draggable').data('evtPos').x
+      })
+    })
+  }
+
+  edit(msg){
+    $.post('/api/notes/edit',{
+      id: this.id,
+      note: msg
+    }).done(ret => {
+      if(ret.status === 0){
+        Toast('update success')
+      }else{
+        Toast(ret.errorMsg)
+      }
+    })
+  }
+
+  add(msg){
+    $.post('/api/notes/add', {note: msg})
+      .done(ret => {
+        if(ret.status === 0){
+          Toast('add success')
+        }else{
+          this.$note.remove()
+          Event.fire('waterfall')
+          Toast(ret.errorMsg)
+        }
+      })
+  }
+
+  delete(){
+    $.post('/api/notes/delete', {id: this.id})
+      .done(ret => {
+        if(ret.status === 0){
+          Toast('delete success');
+          this.$note.remove();
+          Event.fire('waterfall')
+        }else{
+          Toast(ret.errorMsg);
+        }
+    })
   }
 }
+
+export default Note

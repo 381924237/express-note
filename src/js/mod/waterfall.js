@@ -6,10 +6,10 @@ let WaterFall = (function(){
     $items = $ct.children()
 
     let nodeWidth = $items.outerWidth(true),
-        colNum = parseInt($(window).width()/nodeWidth)
+        colNum = parseInt($ct.width()/nodeWidth),
         colSumHeight = []
 
-    for(let i = 0; i < colNum.length; i++){
+    for(let i = 0; i < colNum; i++){
       colSumHeight.push(0)
     }
     
@@ -25,11 +25,12 @@ let WaterFall = (function(){
         }
       })
 
+      let ctPaddingLeft =  ($ct.innerWidth() - $ct.width()) / 2
       $cur.css({
-        left: nodeWidth * minIndex,
+        left: nodeWidth * minIndex + ctPaddingLeft,
         top: minSumHeight
       })
-
+      
       colSumHeight[minIndex] += $cur.outerHeight(true)
     })
   }
