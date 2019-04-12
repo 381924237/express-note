@@ -20,6 +20,9 @@ const sequelize = new Sequelize(undefined, undefined, undefined, {
 const Note = sequelize.define('note', {
   text: {
     type: Sequelize.STRING
+  },
+  username: {
+    type: Sequelize.STRING
   }
 })
 

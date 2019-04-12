@@ -25,7 +25,6 @@ class Note {
     let tpl = `
       <div class="note">
         <div class="note-head">
-          <span class="username"></span>
           <span class="delete">&times;</span>
         </div>
         <div class="note-ct" contenteditable="true">
